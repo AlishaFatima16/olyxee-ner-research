@@ -1,0 +1,9 @@
+{
+  "chunk_id": "001",
+  "entities": [
+    { "text": "Alibaba", "label": "ORG", "score": 0.99 },
+    { "text": "45%", "label": "PERCENT", "score": 0.96 },
+    { "text": "2018-2024", "label": "DATE", "score": 0.92 }
+  ],
+  "status": "SUPPORTED"
+}
