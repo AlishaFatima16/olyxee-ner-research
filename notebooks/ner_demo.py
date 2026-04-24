@@ -1,3 +1,4 @@
+import json
 import os
 os.environ["HF_HUB_OFFLINE"] = "0"
 import spacy
@@ -31,3 +32,36 @@ for e in entities:
     print(f"{e['text']:25} | {e['label']:15} | Score: {round(e['score'], 2)}")
 
 print("\nDemo Complete. Ready for Friday.")
+# ---------- Final Structured JSON Logic ----------
+result = {
+    "chunk_id": "001",
+    "source_document": "founder_example_paragraph",
+    "chunk_text": doc.text,
+    "extraction_status": "supported",
+    "spacy_entities": [
+        {"text": ent.text, "label": ent.label_}
+        for ent in doc.ents
+    ],
+    "gliner_entities": [
+        {
+            "text": ent["text"],
+            "label": ent["label"],
+            "confidence": round(ent["score"], 2),
+            "status": (
+                "supported" if ent["score"] >= 0.85
+                else "review" if ent["score"] >= 0.60
+                else "unsupported"
+            )
+        }
+        for ent in entities
+    ]
+}
+
+print("\n--- Final JSON Output (for backend/Mahlori) ---")
+print(json.dumps(result, indent=2))
+
+os.makedirs("examples", exist_ok=True)
+with open("examples/sample_output.json", "w", encoding="utf-8") as f:
+    json.dump(result, f, indent=2)
+
+print("\nSaved to: examples/sample_output.json")

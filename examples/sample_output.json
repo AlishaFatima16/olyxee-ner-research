@@ -1,0 +1,118 @@
+{
+  "chunk_id": "001",
+  "source_document": "founder_example_paragraph",
+  "chunk_text": "In fact, the Chinese market has the three most influential names of the retail and tech space \u2013 Alibaba, Baidu, and Tencent (collectively touted as BAT), and is betting big in the global AI in retail industry space. The three giants which are claimed to have a cut-throat competition with the U.S. (in terms of resources and capital) are positioning themselves to become the 'future AI' platforms. The trio is also expanding in other Asian countries and investing heavily in the U.S. based AI startups to leverage the power of AI. Backed by such powerful initiatives and presence of these conglomerates, the market in APAC AI is forecast to be the fastest-growing one, with an anticipated CAGR of 45% over 2018-2024.",
+  "extraction_status": "supported",
+  "spacy_entities": [
+    {
+      "text": "Chinese",
+      "label": "NORP"
+    },
+    {
+      "text": "three",
+      "label": "CARDINAL"
+    },
+    {
+      "text": "Alibaba",
+      "label": "GPE"
+    },
+    {
+      "text": "Baidu",
+      "label": "ORG"
+    },
+    {
+      "text": "Tencent",
+      "label": "ORG"
+    },
+    {
+      "text": "three",
+      "label": "CARDINAL"
+    },
+    {
+      "text": "U.S.",
+      "label": "GPE"
+    },
+    {
+      "text": "AI",
+      "label": "ORG"
+    },
+    {
+      "text": "Asian",
+      "label": "NORP"
+    },
+    {
+      "text": "U.S.",
+      "label": "GPE"
+    },
+    {
+      "text": "AI startups",
+      "label": "ORG"
+    },
+    {
+      "text": "AI",
+      "label": "ORG"
+    },
+    {
+      "text": "APAC AI",
+      "label": "ORG"
+    },
+    {
+      "text": "45%",
+      "label": "PERCENT"
+    },
+    {
+      "text": "2018-2024",
+      "label": "DATE"
+    }
+  ],
+  "gliner_entities": [
+    {
+      "text": "Alibaba",
+      "label": "Company",
+      "confidence": 0.99,
+      "status": "supported"
+    },
+    {
+      "text": "Baidu",
+      "label": "Company",
+      "confidence": 0.98,
+      "status": "supported"
+    },
+    {
+      "text": "Tencent",
+      "label": "Company",
+      "confidence": 0.97,
+      "status": "supported"
+    },
+    {
+      "text": "BAT",
+      "label": "Company",
+      "confidence": 0.89,
+      "status": "supported"
+    },
+    {
+      "text": "U.S.",
+      "label": "Country",
+      "confidence": 0.97,
+      "status": "supported"
+    },
+    {
+      "text": "U.S.",
+      "label": "Country",
+      "confidence": 0.97,
+      "status": "supported"
+    },
+    {
+      "text": "CAGR",
+      "label": "Percentage",
+      "confidence": 0.73,
+      "status": "review"
+    },
+    {
+      "text": "45%",
+      "label": "Percentage",
+      "confidence": 0.94,
+      "status": "supported"
+    }
+  ]
+}
