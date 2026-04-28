@@ -1,67 +1,107 @@
 import json
 import os
+import sys
+from pathlib import Path
+
+# Make the project root importable so `alisha` package can be found
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 os.environ["HF_HUB_OFFLINE"] = "0"
+
 import spacy
 from gliner import GLiNER
-import pandas as pd
 
-# 1. Load the models
-print("Loading AI Engines...")
-nlp = spacy.load("en_core_web_lg")
-# Use the official base model (no login required)
-model = GLiNER.from_pretrained("urchade/gliner_medium-v2.1")
+from alisha.normalizer import normalize_entity
 
-# 2. The Founder's Exact Paragraph
-paragraph = """In fact, the Chinese market has the three most influential names of the retail and tech space – Alibaba, Baidu, and Tencent (collectively touted as BAT), and is betting big in the global AI in retail industry space. The three giants which are claimed to have a cut-throat competition with the U.S. (in terms of resources and capital) are positioning themselves to become the 'future AI' platforms. The trio is also expanding in other Asian countries and investing heavily in the U.S. based AI startups to leverage the power of AI. Backed by such powerful initiatives and presence of these conglomerates, the market in APAC AI is forecast to be the fastest-growing one, with an anticipated CAGR of 45% over 2018-2024."""
 
-# --- EXECUTION ---
+# ---------- Config ----------
+GLINER_LABELS = ["Company", "Country", "Market Trend", "Percentage", "Date", "Amount"]
+OUTPUT_PATH = Path(__file__).resolve().parent.parent / "examples" / "sample_output.json"
 
-# A. spaCy Standard Extraction
-print("\n--- spaCy Results (Standard) ---")
-doc = nlp(paragraph)
-for ent in doc.ents[:10]: # Show first 10
-    print(f"{ent.text:25} | {ent.label_}")
+PARAGRAPH = (
+    "In fact, the Chinese market has the three most influential names of the retail "
+    "and tech space - Alibaba, Baidu, and Tencent (collectively touted as BAT), and "
+    "is betting big in the global AI in retail industry space. The three giants which "
+    "are claimed to have a cut-throat competition with the U.S. (in terms of resources "
+    "and capital) are positioning themselves to become the 'future AI' platforms. The "
+    "trio is also expanding in other Asian countries and investing heavily in the U.S. "
+    "based AI startups to leverage the power of AI. Backed by such powerful initiatives "
+    "and presence of these conglomerates, the market in APAC AI is forecast to be the "
+    "fastest-growing one, with an anticipated CAGR of 45% over 2018 - 2024. "
+    "To further elaborate on the geographical trends, North America has procured more "
+    "than 50% of the global share in 2017 and has been leading the regional landscape "
+    "of AI in the retail market. The U.S. has a significant credit in the regional "
+    "trends with over 65% of investments (including M&As, private equity, and venture "
+    "capital) in artificial intelligence technology. Additionally, the region is a "
+    "huge hub for startups in tandem with the presence of tech titans, such as Google, "
+    "IBM, and Microsoft."
+)
 
-# B. GLiNER Custom Extraction (The "Argument" piece)
-print("\n--- GLiNER Results (Custom Labels + Confidence) ---")
-# We define what we want to find in plain English
-labels = ["Company", "Country", "Market Trend", "Percentage"]
-entities = model.predict_entities(paragraph, labels)
 
-for e in entities:
-    print(f"{e['text']:25} | {e['label']:15} | Score: {round(e['score'], 2)}")
+# ---------- Helpers ----------
+def route_status(score: float) -> str:
+    """Confidence routing: >0.85 supported, 0.60-0.85 review, <0.60 unsupported."""
+    if score >= 0.85:
+        return "supported"
+    if score >= 0.60:
+        return "review"
+    return "unsupported"
 
-print("\nDemo Complete. Ready for Friday.")
-# ---------- Final Structured JSON Logic ----------
-result = {
-    "chunk_id": "001",
-    "source_document": "founder_example_paragraph",
-    "chunk_text": doc.text,
-    "extraction_status": "supported",
-    "spacy_entities": [
-        {"text": ent.text, "label": ent.label_}
-        for ent in doc.ents
-    ],
-    "gliner_entities": [
-        {
-            "text": ent["text"],
-            "label": ent["label"],
-            "confidence": round(ent["score"], 2),
-            "status": (
-                "supported" if ent["score"] >= 0.85
-                else "review" if ent["score"] >= 0.60
-                else "unsupported"
-            )
-        }
-        for ent in entities
-    ]
-}
 
-print("\n--- Final JSON Output (for backend/Mahlori) ---")
-print(json.dumps(result, indent=2))
+def build_entity(text: str, label: str, score: float) -> dict:
+    score = float(score)
+    return {
+        "raw": text,
+        "normalized": normalize_entity(label, text),
+        "label": label,
+        "confidence": round(score, 4),
+        "status": route_status(score),
+    }
 
-os.makedirs("examples", exist_ok=True)
-with open("examples/sample_output.json", "w", encoding="utf-8") as f:
-    json.dump(result, f, indent=2)
 
-print("\nSaved to: examples/sample_output.json")
+# ---------- Main ----------
+def main() -> None:
+    print("Loading AI engines...")
+    nlp = spacy.load("en_core_web_lg")
+    gliner = GLiNER.from_pretrained("urchade/gliner_medium-v2.1")
+
+    # A. spaCy standard extraction (no confidence scores -> default to 1.0)
+    print("\n--- spaCy results (standard) ---")
+    doc = nlp(PARAGRAPH)
+    spacy_entities = [build_entity(ent.text, ent.label_, 1.0) for ent in doc.ents]
+    for ent in spacy_entities[:10]:
+        print(f"{ent['raw']:25} | {ent['label']}")
+
+    # B. GLiNER custom extraction (real confidence scores)
+    print("\n--- GLiNER results (custom labels + confidence) ---")
+    raw_gliner = gliner.predict_entities(PARAGRAPH, GLINER_LABELS)
+    gliner_entities = [build_entity(e["text"], e["label"], e["score"]) for e in raw_gliner]
+    for ent in gliner_entities:
+        print(
+            f"{ent['raw']:25} | {ent['label']:15} | "
+            f"score={ent['confidence']:.2f} | {ent['status']}"
+        )
+
+    # C. Final structured output for the backend (Mahlori)
+    result = {
+        "chunk_id": "001",
+        "source_document": "founder_example_paragraph",
+        "chunk_text": PARAGRAPH,
+        "extraction_status": "supported",
+        "spacy_entities": spacy_entities,
+        "gliner_entities": gliner_entities,
+    }
+
+    print("\n--- Final JSON output (for backend/Mahlori) ---")
+    print(json.dumps(result, indent=2))
+
+    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with OUTPUT_PATH.open("w", encoding="utf-8") as f:
+        json.dump(result, f, indent=2)
+
+    print(f"\nSaved to: {OUTPUT_PATH}")
+    print("Demo complete.")
+
+
+if __name__ == "__main__":
+    main()
