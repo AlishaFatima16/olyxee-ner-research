@@ -1,8 +1,8 @@
 {
+  "schema_version": "1.1",
   "chunk_id": "001",
   "source_document": "founder_example_paragraph",
   "chunk_text": "In fact, the Chinese market has the three most influential names of the retail and tech space - Alibaba, Baidu, and Tencent (collectively touted as BAT), and is betting big in the global AI in retail industry space. The three giants which are claimed to have a cut-throat competition with the U.S. (in terms of resources and capital) are positioning themselves to become the 'future AI' platforms. The trio is also expanding in other Asian countries and investing heavily in the U.S. based AI startups to leverage the power of AI. Backed by such powerful initiatives and presence of these conglomerates, the market in APAC AI is forecast to be the fastest-growing one, with an anticipated CAGR of 45% over 2018 - 2024. To further elaborate on the geographical trends, North America has procured more than 50% of the global share in 2017 and has been leading the regional landscape of AI in the retail market. The U.S. has a significant credit in the regional trends with over 65% of investments (including M&As, private equity, and venture capital) in artificial intelligence technology. Additionally, the region is a huge hub for startups in tandem with the presence of tech titans, such as Google, IBM, and Microsoft.",
-  "extraction_status": "supported",
   "spacy_entities": [
     {
       "raw": "Chinese",
@@ -97,7 +97,11 @@
     },
     {
       "raw": "45%",
-      "normalized": 0.45,
+      "normalized": {
+        "type": "percentage",
+        "value": 0.45,
+        "approximate": false
+      },
       "label": "PERCENT",
       "confidence": 1.0,
       "status": "supported"
@@ -105,8 +109,10 @@
     {
       "raw": "2018 - 2024",
       "normalized": {
+        "type": "date_range",
         "start": "2018",
-        "end": "2024"
+        "end": "2024",
+        "precision": "year"
       },
       "label": "DATE",
       "confidence": 1.0,
@@ -121,14 +127,22 @@
     },
     {
       "raw": "more than 50%",
-      "normalized": 0.5,
+      "normalized": {
+        "type": "percentage",
+        "value": 0.5,
+        "approximate": true
+      },
       "label": "PERCENT",
       "confidence": 1.0,
       "status": "supported"
     },
     {
       "raw": "2017",
-      "normalized": "2017",
+      "normalized": {
+        "type": "date",
+        "iso": "2017",
+        "precision": "year"
+      },
       "label": "DATE",
       "confidence": 1.0,
       "status": "supported"
@@ -149,7 +163,11 @@
     },
     {
       "raw": "over 65%",
-      "normalized": 0.65,
+      "normalized": {
+        "type": "percentage",
+        "value": 0.65,
+        "approximate": true
+      },
       "label": "PERCENT",
       "confidence": 1.0,
       "status": "supported"
@@ -221,10 +239,14 @@
     },
     {
       "raw": "45%",
-      "normalized": 0.45,
+      "normalized": {
+        "type": "percentage",
+        "value": 0.45,
+        "approximate": false
+      },
       "label": "Percentage",
       "confidence": 0.8368,
-      "status": "review"
+      "status": "supported"
     },
     {
       "raw": "geographical trends",
@@ -242,14 +264,22 @@
     },
     {
       "raw": "50%",
-      "normalized": 0.5,
+      "normalized": {
+        "type": "percentage",
+        "value": 0.5,
+        "approximate": false
+      },
       "label": "Percentage",
       "confidence": 0.8563,
       "status": "supported"
     },
     {
       "raw": "2017",
-      "normalized": "2017",
+      "normalized": {
+        "type": "date",
+        "iso": "2017",
+        "precision": "year"
+      },
       "label": "Date",
       "confidence": 0.9492,
       "status": "supported"
@@ -266,11 +296,15 @@
       "normalized": null,
       "label": "Market Trend",
       "confidence": 0.7979,
-      "status": "review"
+      "status": "supported"
     },
     {
       "raw": "65%",
-      "normalized": 0.65,
+      "normalized": {
+        "type": "percentage",
+        "value": 0.65,
+        "approximate": false
+      },
       "label": "Percentage",
       "confidence": 0.718,
       "status": "review"
