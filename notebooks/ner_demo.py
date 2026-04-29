@@ -3,7 +3,7 @@ import os
 import sys
 from pathlib import Path
 
-# Make the project root importable so `alisha` package can be found
+# Make project root importable
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 os.environ["HF_HUB_OFFLINE"] = "0"
@@ -11,7 +11,9 @@ os.environ["HF_HUB_OFFLINE"] = "0"
 import spacy
 from gliner import GLiNER
 
-from alisha.normalizer import normalize_entity
+from verification.normalizer import normalize_entity
+from verification.router import route
+from verification.schema import SCHEMA_VERSION
 
 
 # ---------- Config ----------
@@ -39,23 +41,15 @@ PARAGRAPH = (
 
 
 # ---------- Helpers ----------
-def route_status(score: float) -> str:
-    """Confidence routing: >0.85 supported, 0.60-0.85 review, <0.60 unsupported."""
-    if score >= 0.85:
-        return "supported"
-    if score >= 0.60:
-        return "review"
-    return "unsupported"
-
-
 def build_entity(text: str, label: str, score: float) -> dict:
     score = float(score)
+    status = route(label, score, text)
     return {
         "raw": text,
         "normalized": normalize_entity(label, text),
         "label": label,
         "confidence": round(score, 4),
-        "status": route_status(score),
+        "status": status.value,
     }
 
 
@@ -65,7 +59,7 @@ def main() -> None:
     nlp = spacy.load("en_core_web_lg")
     gliner = GLiNER.from_pretrained("urchade/gliner_medium-v2.1")
 
-    # A. spaCy standard extraction (no confidence scores -> default to 1.0)
+    # A. spaCy standard extraction (no per-entity scores -> default to 1.0)
     print("\n--- spaCy results (standard) ---")
     doc = nlp(PARAGRAPH)
     spacy_entities = [build_entity(ent.text, ent.label_, 1.0) for ent in doc.ents]
@@ -84,10 +78,10 @@ def main() -> None:
 
     # C. Final structured output for the backend (Mahlori)
     result = {
+        "schema_version": SCHEMA_VERSION,
         "chunk_id": "001",
         "source_document": "founder_example_paragraph",
         "chunk_text": PARAGRAPH,
-        "extraction_status": "supported",
         "spacy_entities": spacy_entities,
         "gliner_entities": gliner_entities,
     }
