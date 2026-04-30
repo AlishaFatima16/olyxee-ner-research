@@ -1,28 +1,73 @@
-"""Render unified_entities as a color-coded displaCy HTML page."""
+"""
+Render unified_entities as a color-coded displaCy HTML page.
+
+Usage:
+  python notebooks/visualize.py                       # use existing sample_output.json
+  python notebooks/visualize.py --text "Apple bought OpenAI for $5bn in 2024."
+  python notebooks/visualize.py --file path/to/input.txt
+"""
+from __future__ import annotations
+
+import argparse
 import json
+import sys
 import webbrowser
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
 from spacy import displacy
 
-ROOT = Path(__file__).resolve().parent.parent
-INPUT_PATH = ROOT / "examples" / "sample_output.json"
+DEFAULT_INPUT = ROOT / "examples" / "sample_output.json"
 OUTPUT_PATH = ROOT / "examples" / "visualization.html"
 
 STATUS_COLORS = {
-    "supported":   "#a8e6a3",  # green  — ready for DB
-    "review":      "#ffe082",  # amber  — needs human eyes
-    "ambiguous":   "#ffab91",  # orange — engines disagree
-    "unsupported": "#cfd8dc",  # gray   — filtered out
+    "supported":   "#a8e6a3",
+    "review":      "#ffe082",
+    "ambiguous":   "#ffab91",
+    "unsupported": "#cfd8dc",
 }
 
 
+def _parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Visualize Olyxee Verification Layer output.")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--text", help="Run pipeline on a paragraph passed inline.")
+    group.add_argument("--file", help="Run pipeline on the contents of a .txt file.")
+    parser.add_argument(
+        "--no-open", action="store_true", help="Skip opening the browser."
+    )
+    return parser.parse_args()
+
+
+def _load_data(args: argparse.Namespace) -> dict:
+    if args.text:
+        from verification.pipeline import process_text
+        return process_text(args.text, source_document="cli_text_input")
+
+    if args.file:
+        path = Path(args.file)
+        if not path.exists():
+            raise FileNotFoundError(f"Input file not found: {path}")
+        from verification.pipeline import process_text
+        return process_text(path.read_text(encoding="utf-8"), source_document=path.name)
+
+    if not DEFAULT_INPUT.exists():
+        raise FileNotFoundError(
+            f"No --text/--file given and {DEFAULT_INPUT} doesn't exist. "
+            "Run `python notebooks/ner_demo.py` first, or pass --text."
+        )
+    return json.loads(DEFAULT_INPUT.read_text(encoding="utf-8"))
+
+
 def main() -> None:
-    data = json.loads(INPUT_PATH.read_text(encoding="utf-8"))
+    args = _parse_args()
+    data = _load_data(args)
+
     text = data["chunk_text"]
     entities = data["unified_entities"]
 
-    # Build displaCy input
     ents, colors = [], {}
     for ent in entities:
         label = f"{ent['label']} • {ent['status']}"
@@ -33,20 +78,20 @@ def main() -> None:
         })
         colors[label] = STATUS_COLORS.get(ent["status"], "#e0e0e0")
 
-    doc = {"text": text, "ents": ents, "title": None}
     rendered = displacy.render(
-        doc, style="ent", manual=True, options={"colors": colors}
+        {"text": text, "ents": ents, "title": None},
+        style="ent",
+        manual=True,
+        options={"colors": colors},
     )
 
-    # Stats for the header
     counts = {s: 0 for s in STATUS_COLORS}
     for e in entities:
         counts[e["status"]] = counts.get(e["status"], 0) + 1
 
     legend = "".join(
         f'<span style="background:{color};padding:4px 12px;border-radius:6px;'
-        f'margin-right:12px;font-size:13px;">'
-        f'{status} ({counts.get(status,0)})</span>'
+        f'margin-right:12px;font-size:13px;">{status} ({counts.get(status,0)})</span>'
         for status, color in STATUS_COLORS.items()
     )
 
@@ -97,8 +142,9 @@ def main() -> None:
 
     OUTPUT_PATH.write_text(full_html, encoding="utf-8")
     print(f"Saved visualization to: {OUTPUT_PATH}")
-    print("Opening in browser...")
-    webbrowser.open(OUTPUT_PATH.as_uri())
+    if not args.no_open:
+        print("Opening in browser...")
+        webbrowser.open(OUTPUT_PATH.as_uri())
 
 
 if __name__ == "__main__":

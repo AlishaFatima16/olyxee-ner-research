@@ -14,3 +14,7 @@
 {"timestamp": "2026-04-30T18:45:52.195736+00:00", "label": "Percentage", "raw": "45%", "confidence": 0.8368, "threshold": 0.8, "kind": "near_supported"}
 {"timestamp": "2026-04-30T18:45:52.197490+00:00", "label": "Market Trend", "raw": "geographical trends", "confidence": 0.6826, "threshold": 0.7, "kind": "near_supported"}
 {"timestamp": "2026-04-30T18:45:52.219214+00:00", "label": "Date", "raw": "2017", "confidence": 0.9492, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-04-30T18:56:38.769688+00:00", "label": "Company", "raw": "DeepMind", "confidence": 0.8546339869499207, "threshold": 0.85, "kind": "near_supported"}
+{"timestamp": "2026-04-30T18:56:38.864498+00:00", "label": "Date", "raw": "Q3 2024", "confidence": 0.9263272881507874, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-04-30T18:56:38.881895+00:00", "label": "Company", "raw": "DeepMind", "confidence": 0.8546, "threshold": 0.85, "kind": "near_supported"}
+{"timestamp": "2026-04-30T18:56:38.881895+00:00", "label": "Date", "raw": "Q3 2024", "confidence": 0.9263, "threshold": 0.95, "kind": "near_supported"}
