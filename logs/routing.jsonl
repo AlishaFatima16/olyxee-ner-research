@@ -1,3 +1,8 @@
 {"timestamp": "2026-04-29T05:20:23.390412+00:00", "label": "Company", "raw": "BAT", "confidence": 0.8203780055046082, "threshold": 0.85, "kind": "near_supported"}
 {"timestamp": "2026-04-29T05:20:23.484172+00:00", "label": "Percentage", "raw": "45%", "confidence": 0.836828887462616, "threshold": 0.8, "kind": "near_supported"}
 {"timestamp": "2026-04-29T05:20:23.499793+00:00", "label": "Market Trend", "raw": "regional trends", "confidence": 0.7978557348251343, "threshold": 0.75, "kind": "near_supported"}
+{"timestamp": "2026-04-30T18:23:31.700393+00:00", "label": "Date", "raw": "the third quarter of next yearish", "confidence": 0.97, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-04-30T18:26:55.550794+00:00", "label": "Company", "raw": "BAT", "confidence": 0.8203780055046082, "threshold": 0.85, "kind": "near_supported"}
+{"timestamp": "2026-04-30T18:26:55.612963+00:00", "label": "Percentage", "raw": "45%", "confidence": 0.836828887462616, "threshold": 0.8, "kind": "near_supported"}
+{"timestamp": "2026-04-30T18:26:55.613960+00:00", "label": "Market Trend", "raw": "geographical trends", "confidence": 0.6826131343841553, "threshold": 0.7, "kind": "near_supported"}
+{"timestamp": "2026-04-30T18:26:55.615243+00:00", "label": "Date", "raw": "2017", "confidence": 0.9492429494857788, "threshold": 0.95, "kind": "near_supported"}

@@ -3,7 +3,6 @@ import os
 import sys
 from pathlib import Path
 
-# Make project root importable
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 os.environ["HF_HUB_OFFLINE"] = "0"
@@ -11,12 +10,12 @@ os.environ["HF_HUB_OFFLINE"] = "0"
 import spacy
 from gliner import GLiNER
 
+from verification.merger import merge_entities
 from verification.normalizer import normalize_entity
 from verification.router import route
 from verification.schema import SCHEMA_VERSION
 
 
-# ---------- Config ----------
 GLINER_LABELS = ["Company", "Country", "Market Trend", "Percentage", "Date", "Amount"]
 OUTPUT_PATH = Path(__file__).resolve().parent.parent / "examples" / "sample_output.json"
 
@@ -40,50 +39,64 @@ PARAGRAPH = (
 )
 
 
-# ---------- Helpers ----------
-def build_entity(text: str, label: str, score: float) -> dict:
+def build_entity(text: str, label: str, score: float, start_char: int, end_char: int) -> dict:
+    """Build a per-engine entity dict (pre-merge) with character offsets."""
     score = float(score)
-    status = route(label, score, text)
     return {
         "raw": text,
         "normalized": normalize_entity(label, text),
         "label": label,
+        "start_char": start_char,
+        "end_char": end_char,
         "confidence": round(score, 4),
-        "status": status.value,
+        "status": route(label, score, text).value,
     }
 
 
-# ---------- Main ----------
 def main() -> None:
     print("Loading AI engines...")
     nlp = spacy.load("en_core_web_lg")
     gliner = GLiNER.from_pretrained("urchade/gliner_medium-v2.1")
 
-    # A. spaCy standard extraction (no per-entity scores -> default to 1.0)
-    print("\n--- spaCy results (standard) ---")
+    # spaCy
     doc = nlp(PARAGRAPH)
-    spacy_entities = [build_entity(ent.text, ent.label_, 1.0) for ent in doc.ents]
-    for ent in spacy_entities[:10]:
-        print(f"{ent['raw']:25} | {ent['label']}")
+    spacy_entities = [
+        build_entity(ent.text, ent.label_, 1.0, ent.start_char, ent.end_char)
+        for ent in doc.ents
+    ]
 
-    # B. GLiNER custom extraction (real confidence scores)
-    print("\n--- GLiNER results (custom labels + confidence) ---")
+    # GLiNER
     raw_gliner = gliner.predict_entities(PARAGRAPH, GLINER_LABELS)
-    gliner_entities = [build_entity(e["text"], e["label"], e["score"]) for e in raw_gliner]
-    for ent in gliner_entities:
+    gliner_entities = [
+        build_entity(e["text"], e["label"], e["score"], e["start"], e["end"])
+        for e in raw_gliner
+    ]
+
+    # Unified deduplication layer (the v1.2 contract)
+    unified = merge_entities(spacy_entities, gliner_entities)
+
+    print(f"\n--- Unified entities ({len(unified)}) ---")
+    for ent in unified:
+        sources = ",".join(ent["sources"])
+        marker = ""
+        if ent["status"] == "ambiguous":
+            marker = "  [AMBIGUOUS]"
+        elif ent["status"] == "review":
+            marker = "  [REVIEW]"
+        elif ent["status"] == "unsupported":
+            marker = "  [UNSUPPORTED]"
         print(
-            f"{ent['raw']:25} | {ent['label']:15} | "
-            f"score={ent['confidence']:.2f} | {ent['status']}"
+            f"[{ent['start_char']:>4}-{ent['end_char']:>4}] {ent['raw']:25} | "
+            f"{ent['label']:15} | score={ent['confidence']:.2f} | "
+            f"{ent['status']:11} | {sources}{marker}"
         )
 
-    # C. Final structured output for the backend (Mahlori)
     result = {
         "schema_version": SCHEMA_VERSION,
         "chunk_id": "001",
         "source_document": "founder_example_paragraph",
         "chunk_text": PARAGRAPH,
-        "spacy_entities": spacy_entities,
-        "gliner_entities": gliner_entities,
+        "unified_entities": unified,
     }
 
     print("\n--- Final JSON output (for backend/Mahlori) ---")
