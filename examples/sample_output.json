@@ -3,97 +3,185 @@
   "chunk_id": "001",
   "source_document": "founder_example_paragraph",
   "chunk_text": "In fact, the Chinese market has the three most influential names of the retail and tech space - Alibaba, Baidu, and Tencent (collectively touted as BAT), and is betting big in the global AI in retail industry space. The three giants which are claimed to have a cut-throat competition with the U.S. (in terms of resources and capital) are positioning themselves to become the 'future AI' platforms. The trio is also expanding in other Asian countries and investing heavily in the U.S. based AI startups to leverage the power of AI. Backed by such powerful initiatives and presence of these conglomerates, the market in APAC AI is forecast to be the fastest-growing one, with an anticipated CAGR of 45% over 2018 - 2024. To further elaborate on the geographical trends, North America has procured more than 50% of the global share in 2017 and has been leading the regional landscape of AI in the retail market. The U.S. has a significant credit in the regional trends with over 65% of investments (including M&As, private equity, and venture capital) in artificial intelligence technology. Additionally, the region is a huge hub for startups in tandem with the presence of tech titans, such as Google, IBM, and Microsoft.",
-  "spacy_entities": [
+  "unified_entities": [
     {
       "raw": "Chinese",
       "normalized": null,
       "label": "NORP",
+      "start_char": 13,
+      "end_char": 20,
       "confidence": 1.0,
-      "status": "supported"
+      "status": "supported",
+      "sources": [
+        "spacy"
+      ]
     },
     {
       "raw": "three",
       "normalized": null,
       "label": "CARDINAL",
+      "start_char": 36,
+      "end_char": 41,
       "confidence": 1.0,
-      "status": "supported"
+      "status": "supported",
+      "sources": [
+        "spacy"
+      ]
     },
     {
       "raw": "Alibaba",
       "normalized": null,
-      "label": "GPE",
-      "confidence": 1.0,
-      "status": "supported"
+      "label": "Company",
+      "start_char": 96,
+      "end_char": 103,
+      "confidence": 0.9758,
+      "status": "ambiguous",
+      "sources": [
+        "gliner",
+        "spacy"
+      ],
+      "metadata": {
+        "conflicts": [
+          "gliner:Company",
+          "spacy:GPE"
+        ]
+      }
     },
     {
       "raw": "Baidu",
       "normalized": null,
-      "label": "ORG",
-      "confidence": 1.0,
-      "status": "supported"
+      "label": "Company",
+      "start_char": 105,
+      "end_char": 110,
+      "confidence": 0.9662,
+      "status": "supported",
+      "sources": [
+        "gliner",
+        "spacy"
+      ]
     },
     {
       "raw": "Tencent",
       "normalized": null,
-      "label": "ORG",
-      "confidence": 1.0,
-      "status": "supported"
+      "label": "Company",
+      "start_char": 116,
+      "end_char": 123,
+      "confidence": 0.9493,
+      "status": "supported",
+      "sources": [
+        "gliner",
+        "spacy"
+      ]
+    },
+    {
+      "raw": "BAT",
+      "normalized": null,
+      "label": "Company",
+      "start_char": 148,
+      "end_char": 151,
+      "confidence": 0.8204,
+      "status": "review",
+      "sources": [
+        "gliner"
+      ]
     },
     {
       "raw": "three",
       "normalized": null,
       "label": "CARDINAL",
+      "start_char": 220,
+      "end_char": 225,
       "confidence": 1.0,
-      "status": "supported"
+      "status": "supported",
+      "sources": [
+        "spacy"
+      ]
     },
     {
       "raw": "U.S.",
       "normalized": null,
-      "label": "GPE",
-      "confidence": 1.0,
-      "status": "supported"
+      "label": "Country",
+      "start_char": 293,
+      "end_char": 297,
+      "confidence": 0.9681,
+      "status": "supported",
+      "sources": [
+        "gliner",
+        "spacy"
+      ]
     },
     {
       "raw": "AI",
       "normalized": null,
       "label": "ORG",
+      "start_char": 383,
+      "end_char": 385,
       "confidence": 1.0,
-      "status": "supported"
+      "status": "supported",
+      "sources": [
+        "spacy"
+      ]
     },
     {
       "raw": "Asian",
       "normalized": null,
       "label": "NORP",
+      "start_char": 434,
+      "end_char": 439,
       "confidence": 1.0,
-      "status": "supported"
+      "status": "supported",
+      "sources": [
+        "spacy"
+      ]
     },
     {
       "raw": "U.S.",
       "normalized": null,
-      "label": "GPE",
-      "confidence": 1.0,
-      "status": "supported"
+      "label": "Country",
+      "start_char": 479,
+      "end_char": 483,
+      "confidence": 0.9596,
+      "status": "supported",
+      "sources": [
+        "gliner",
+        "spacy"
+      ]
     },
     {
       "raw": "AI startups",
       "normalized": null,
       "label": "ORG",
+      "start_char": 490,
+      "end_char": 501,
       "confidence": 1.0,
-      "status": "supported"
+      "status": "supported",
+      "sources": [
+        "spacy"
+      ]
     },
     {
       "raw": "AI",
       "normalized": null,
       "label": "ORG",
+      "start_char": 527,
+      "end_char": 529,
       "confidence": 1.0,
-      "status": "supported"
+      "status": "supported",
+      "sources": [
+        "spacy"
+      ]
     },
     {
       "raw": "APAC AI",
       "normalized": null,
       "label": "ORG",
+      "start_char": 618,
+      "end_char": 625,
       "confidence": 1.0,
-      "status": "supported"
+      "status": "supported",
+      "sources": [
+        "spacy"
+      ]
     },
     {
       "raw": "45%",
@@ -102,9 +190,15 @@
         "value": 0.45,
         "approximate": false
       },
-      "label": "PERCENT",
-      "confidence": 1.0,
-      "status": "supported"
+      "label": "Percentage",
+      "start_char": 697,
+      "end_char": 700,
+      "confidence": 0.8368,
+      "status": "supported",
+      "sources": [
+        "gliner",
+        "spacy"
+      ]
     },
     {
       "raw": "2018 - 2024",
@@ -115,15 +209,38 @@
         "precision": "year"
       },
       "label": "DATE",
+      "start_char": 706,
+      "end_char": 717,
       "confidence": 1.0,
-      "status": "supported"
+      "status": "supported",
+      "sources": [
+        "spacy"
+      ]
+    },
+    {
+      "raw": "geographical trends",
+      "normalized": null,
+      "label": "Market Trend",
+      "start_char": 747,
+      "end_char": 766,
+      "confidence": 0.6826,
+      "status": "review",
+      "sources": [
+        "gliner"
+      ]
     },
     {
       "raw": "North America",
       "normalized": null,
-      "label": "LOC",
-      "confidence": 1.0,
-      "status": "supported"
+      "label": "Country",
+      "start_char": 768,
+      "end_char": 781,
+      "confidence": 0.5321,
+      "status": "unsupported",
+      "sources": [
+        "gliner",
+        "spacy"
+      ]
     },
     {
       "raw": "more than 50%",
@@ -132,146 +249,15 @@
         "value": 0.5,
         "approximate": true
       },
-      "label": "PERCENT",
-      "confidence": 1.0,
-      "status": "supported"
-    },
-    {
-      "raw": "2017",
-      "normalized": {
-        "type": "date",
-        "iso": "2017",
-        "precision": "year"
-      },
-      "label": "DATE",
-      "confidence": 1.0,
-      "status": "supported"
-    },
-    {
-      "raw": "AI",
-      "normalized": null,
-      "label": "ORG",
-      "confidence": 1.0,
-      "status": "supported"
-    },
-    {
-      "raw": "U.S.",
-      "normalized": null,
-      "label": "GPE",
-      "confidence": 1.0,
-      "status": "supported"
-    },
-    {
-      "raw": "over 65%",
-      "normalized": {
-        "type": "percentage",
-        "value": 0.65,
-        "approximate": true
-      },
-      "label": "PERCENT",
-      "confidence": 1.0,
-      "status": "supported"
-    },
-    {
-      "raw": "Google",
-      "normalized": null,
-      "label": "ORG",
-      "confidence": 1.0,
-      "status": "supported"
-    },
-    {
-      "raw": "IBM",
-      "normalized": null,
-      "label": "ORG",
-      "confidence": 1.0,
-      "status": "supported"
-    },
-    {
-      "raw": "Microsoft",
-      "normalized": null,
-      "label": "ORG",
-      "confidence": 1.0,
-      "status": "supported"
-    }
-  ],
-  "gliner_entities": [
-    {
-      "raw": "Alibaba",
-      "normalized": null,
-      "label": "Company",
-      "confidence": 0.9758,
-      "status": "supported"
-    },
-    {
-      "raw": "Baidu",
-      "normalized": null,
-      "label": "Company",
-      "confidence": 0.9662,
-      "status": "supported"
-    },
-    {
-      "raw": "Tencent",
-      "normalized": null,
-      "label": "Company",
-      "confidence": 0.9493,
-      "status": "supported"
-    },
-    {
-      "raw": "BAT",
-      "normalized": null,
-      "label": "Company",
-      "confidence": 0.8204,
-      "status": "review"
-    },
-    {
-      "raw": "U.S.",
-      "normalized": null,
-      "label": "Country",
-      "confidence": 0.9681,
-      "status": "supported"
-    },
-    {
-      "raw": "U.S.",
-      "normalized": null,
-      "label": "Country",
-      "confidence": 0.9596,
-      "status": "supported"
-    },
-    {
-      "raw": "45%",
-      "normalized": {
-        "type": "percentage",
-        "value": 0.45,
-        "approximate": false
-      },
       "label": "Percentage",
-      "confidence": 0.8368,
-      "status": "supported"
-    },
-    {
-      "raw": "geographical trends",
-      "normalized": null,
-      "label": "Market Trend",
-      "confidence": 0.6826,
-      "status": "review"
-    },
-    {
-      "raw": "North America",
-      "normalized": null,
-      "label": "Country",
-      "confidence": 0.5321,
-      "status": "unsupported"
-    },
-    {
-      "raw": "50%",
-      "normalized": {
-        "type": "percentage",
-        "value": 0.5,
-        "approximate": false
-      },
-      "label": "Percentage",
+      "start_char": 795,
+      "end_char": 808,
       "confidence": 0.8563,
-      "status": "supported"
+      "status": "supported",
+      "sources": [
+        "gliner",
+        "spacy"
+      ]
     },
     {
       "raw": "2017",
@@ -281,54 +267,107 @@
         "precision": "year"
       },
       "label": "Date",
+      "start_char": 832,
+      "end_char": 836,
       "confidence": 0.9492,
-      "status": "review"
+      "status": "review",
+      "sources": [
+        "gliner",
+        "spacy"
+      ]
+    },
+    {
+      "raw": "AI",
+      "normalized": null,
+      "label": "ORG",
+      "start_char": 884,
+      "end_char": 886,
+      "confidence": 1.0,
+      "status": "supported",
+      "sources": [
+        "spacy"
+      ]
     },
     {
       "raw": "U.S.",
       "normalized": null,
       "label": "Country",
+      "start_char": 913,
+      "end_char": 917,
       "confidence": 0.9752,
-      "status": "supported"
+      "status": "supported",
+      "sources": [
+        "gliner",
+        "spacy"
+      ]
     },
     {
       "raw": "regional trends",
       "normalized": null,
       "label": "Market Trend",
+      "start_char": 950,
+      "end_char": 965,
       "confidence": 0.7979,
-      "status": "supported"
+      "status": "supported",
+      "sources": [
+        "gliner"
+      ]
     },
     {
-      "raw": "65%",
+      "raw": "over 65%",
       "normalized": {
         "type": "percentage",
         "value": 0.65,
-        "approximate": false
+        "approximate": true
       },
       "label": "Percentage",
+      "start_char": 971,
+      "end_char": 979,
       "confidence": 0.718,
-      "status": "review"
+      "status": "review",
+      "sources": [
+        "gliner",
+        "spacy"
+      ]
     },
     {
       "raw": "Google",
       "normalized": null,
       "label": "Company",
+      "start_char": 1192,
+      "end_char": 1198,
       "confidence": 0.9638,
-      "status": "supported"
+      "status": "supported",
+      "sources": [
+        "gliner",
+        "spacy"
+      ]
     },
     {
       "raw": "IBM",
       "normalized": null,
       "label": "Company",
+      "start_char": 1200,
+      "end_char": 1203,
       "confidence": 0.9609,
-      "status": "supported"
+      "status": "supported",
+      "sources": [
+        "gliner",
+        "spacy"
+      ]
     },
     {
       "raw": "Microsoft",
       "normalized": null,
       "label": "Company",
+      "start_char": 1209,
+      "end_char": 1218,
       "confidence": 0.9494,
-      "status": "supported"
+      "status": "supported",
+      "sources": [
+        "gliner",
+        "spacy"
+      ]
     }
   ]
 }
