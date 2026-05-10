@@ -1,130 +1,107 @@
-from typing import List
-
-from .config import NORMALIZABLE_LABELS
-from .normalizer import normalize_entity
-from .router import route
-from .schema import Status
-
-LABEL_EQUIVALENCE = {
-    "ORG": "Company",
-    "Company": "Company",
-    "GPE": "Country",
-    "LOC": "Country",
-    "Country": "Country",
-    "PERSON": "Person",
-    "Person": "Person",
-    "DATE": "Date",
-    "Date": "Date",
-    "PERCENT": "Percentage",
-    "PERCENTAGE": "Percentage",
-    "Percentage": "Percentage",
-    "MONEY": "Money",
-    "AMOUNT": "Money",
-    "Amount": "Money",
-    "NORP": "Group",
-    "CARDINAL": "Number",
-    "Market Trend": "Market Trend",
-}
+from __future__ import annotations
+import hashlib
+from typing import Any
+from verification.schema import Status
+from verification.router import route_entity
+from verification.normalizer import normalize
 
 
-def _canonical_label(label: str) -> str:
-    return LABEL_EQUIVALENCE.get(label, label)
+def _entity_id(chunk_id: str, label: str, start_char: int, end_char: int) -> str:
+    """Deterministic 16-char hex ID — same entity in same text always gets same ID."""
+    key = f"{chunk_id}:{label}:{start_char}:{end_char}"
+    return hashlib.sha256(key.encode()).hexdigest()[:16]
 
 
-def _group_overlapping(entities: List[dict]) -> List[List[dict]]:
-    sorted_ents = sorted(entities, key=lambda e: (e["start_char"], -e["end_char"]))
-    groups, current, current_end = [], [], -1
-    for ent in sorted_ents:
-        if ent["start_char"] < current_end:
-            current.append(ent)
-            current_end = max(current_end, ent["end_char"])
-        else:
-            if current:
-                groups.append(current)
-            current = [ent]
-            current_end = ent["end_char"]
-    if current:
-        groups.append(current)
-    return groups
+def _overlap(a: dict, b: dict) -> bool:
+    return a["start_char"] < b["end_char"] and b["start_char"] < a["end_char"]
 
 
-def _pick_canonical_span(group: List[dict]) -> dict:
-    """Longest span wins. Ties broken by GLiNER preference."""
-    return max(
-        group,
-        key=lambda e: (e["end_char"] - e["start_char"], e["source"] == "gliner"),
-    )
+def _span_len(e: dict) -> int:
+    return e["end_char"] - e["start_char"]
 
 
-def _pick_label(group: List[dict], canonical: dict) -> str:
-    """
-    On label disagreement, prefer GLiNER's label — it's the more specific
-    custom-trained label (Company > ORG, Country > GPE, etc.).
-    """
-    gliner_in_group = [e for e in group if e["source"] == "gliner"]
-    if gliner_in_group:
-        return max(gliner_in_group, key=lambda e: e["confidence"])["label"]
-    return canonical["label"]
+def _canonicalize_label(label: str) -> str:
+    mapping = {
+        "ORG": "Company", "GPE": "Country", "LOC": "Location",
+        "PERSON": "Person", "MONEY": "Money", "DATE": "Date",
+        "PERCENT": "Percentage",
+    }
+    return mapping.get(label.upper(), label)
 
 
-def _best_score(group: List[dict]) -> float:
-    gliner_scores = [e["confidence"] for e in group if e["source"] == "gliner"]
-    if gliner_scores:
-        return max(gliner_scores)
-    return max(e["confidence"] for e in group)
-
-
-def merge_entities(spacy_list: List[dict], gliner_list: List[dict]) -> List[dict]:
-    """Combine spaCy + GLiNER entities into a single deduplicated, unified list."""
-    tagged = (
-        [{**e, "source": "spacy"} for e in spacy_list]
-        + [{**e, "source": "gliner"} for e in gliner_list]
-    )
-    if not tagged:
+def merge_entities(
+    spacy_entities: list[dict],
+    gliner_entities: list[dict],
+    chunk_id: str = "unknown",
+) -> list[dict]:
+    all_entities = list(spacy_entities) + list(gliner_entities)
+    if not all_entities:
         return []
 
-    unified = []
-    for group in _group_overlapping(tagged):
-        canonical = _pick_canonical_span(group)
-        score = _best_score(group)
-        chosen_label = _pick_label(group, canonical)
+    all_entities.sort(key=lambda e: e["start_char"])
 
-        canonical_labels = {_canonical_label(e["label"]) for e in group}
-        is_ambiguous = len(canonical_labels) > 1
+    groups: list[list[dict]] = []
+    for entity in all_entities:
+        placed = False
+        for group in groups:
+            if any(_overlap(entity, member) for member in group):
+                group.append(entity)
+                placed = True
+                break
+        if not placed:
+            groups.append([entity])
 
-        # Re-normalize on the canonical (longest) raw text so approximate
-        # markers ("over", "more than") are captured even if GLiNER missed them.
-        normalized = normalize_entity(chosen_label, canonical["raw"])
+    merged: list[dict] = []
+    for group in groups:
+        canonical = max(group, key=_span_len)
 
-        # Status decision (in priority order)
-        if is_ambiguous:
-            status = Status.AMBIGUOUS.value
+        gliner_members = [e for e in group if "gliner" in e.get("sources", [])]
+        if gliner_members:
+            primary = max(gliner_members, key=_span_len)
+            confidence = primary["confidence"]
         else:
-            status = route(chosen_label, score, canonical["raw"]).value
-            # Downgrade to 'review' if normalization was expected but failed
-            if (
-                status == Status.SUPPORTED.value
-                and chosen_label.upper() in NORMALIZABLE_LABELS
-                and normalized is None
-            ):
-                status = Status.REVIEW.value
+            confidence = canonical.get("confidence", 0.0)
 
-        entity = {
-            "raw": canonical["raw"],
+        sources = sorted({s for e in group for s in e.get("sources", [])})
+
+        all_labels = {_canonicalize_label(e["label"]) for e in group}
+        canonical_label = _canonicalize_label(canonical["label"])
+
+        conflicts = None
+        if len(all_labels) > 1:
+            conflicts = sorted({
+                f"{s}:{e['label']}"
+                for e in group
+                for s in e.get("sources", [])
+            })
+
+        raw = canonical["raw"]
+        normalized = normalize(raw, canonical_label)
+
+        status = route_entity(
+            label=canonical_label,
+            confidence=confidence,
+            normalized=normalized,
+            raw=raw,
+            conflicts=conflicts,
+        )
+
+        entity_out: dict[str, Any] = {
+            "entity_id": _entity_id(chunk_id, canonical_label, canonical["start_char"], canonical["end_char"]),
+            "raw": raw,
             "normalized": normalized,
-            "label": chosen_label,
+            "label": canonical_label,
             "start_char": canonical["start_char"],
             "end_char": canonical["end_char"],
-            "confidence": round(float(score), 4),
+            "confidence": round(confidence, 4),
             "status": status,
-            "sources": sorted({e["source"] for e in group}),
+            "sources": sources,
         }
 
-        if is_ambiguous:
-            entity["metadata"] = {
-                "conflicts": sorted({f"{e['source']}:{e['label']}" for e in group})
-            }
+        if conflicts:
+            entity_out["metadata"] = {"conflicts": conflicts}
 
-        unified.append(entity)
+        merged.append(entity_out)
 
-    return unified
+    merged.sort(key=lambda e: e["start_char"])
+    return merged

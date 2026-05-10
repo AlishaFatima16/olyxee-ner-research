@@ -1,17 +1,23 @@
-DEFAULT_THRESHOLDS = {"supported": 0.85, "review": 0.60}
+import os
+from pathlib import Path
 
-# Per-label thresholds — surgical, not global. Aligned to Ordo brief.
-PER_LABEL_THRESHOLDS = {
-    "MONEY":        {"supported": 0.90, "review": 0.70},
-    "AMOUNT":       {"supported": 0.90, "review": 0.70},
-    "DATE":         {"supported": 0.95, "review": 0.75},  # near-perfect required
-    "PERCENTAGE":   {"supported": 0.80, "review": 0.55},
-    "PERCENT":      {"supported": 0.80, "review": 0.55},
-    "MARKET TREND": {"supported": 0.70, "review": 0.50},  # harder to catch
+PIPELINE_VERSION = "1.3.0"
+
+MODEL_VERSIONS = {
+    "spacy": "en_core_web_lg-3.7.x",
+    "gliner": "urchade/gliner_medium-v2.1",
 }
 
-# Labels where normalization is expected; if it returns None we downgrade to 'review'.
-NORMALIZABLE_LABELS = {"DATE", "MONEY", "AMOUNT", "PERCENT", "PERCENTAGE"}
+THRESHOLDS: dict[str, tuple[float, float]] = {
+    "DATE":           (0.95, 0.75),
+    "MONEY":          (0.90, 0.70),
+    "AMOUNT":         (0.90, 0.70),
+    "PERCENTAGE":     (0.80, 0.55),
+    "MARKET TREND":   (0.70, 0.50),
+}
+
+DEFAULT_THRESHOLD: tuple[float, float] = (0.85, 0.60)
 
 BORDERLINE_BAND = 0.05
-LOG_PATH = "logs/routing.jsonl"
+
+LOG_PATH = Path(os.getenv("ROUTING_LOG_PATH", "logs/routing.jsonl"))
