@@ -1,12 +1,28 @@
+from __future__ import annotations
 import re
 import dateparser
 
-CURRENCY_SYMBOLS = {"$": "USD", "£": "GBP", "€": "EUR", "₹": "INR"}
-MULTIPLIERS = {"k": 1_000, "m": 1_000_000, "bn": 1_000_000_000, "b": 1_000_000_000}
-APPROX_MARKERS = r"(~|≈|approx\.?|about|around|over|under|more than|less than)"
+CURRENCY_SYMBOLS: dict[str, str] = {
+    "$": "USD",
+    "£": "GBP",
+    "€": "EUR",
+    "₹": "INR",
+}
+
+MULTIPLIERS: dict[str, int] = {
+    "k":  1_000,
+    "m":  1_000_000,
+    "bn": 1_000_000_000,
+    "b":  1_000_000_000,
+}
+
+APPROX_PATTERN = re.compile(
+    r"(~|≈|approx\.?|about|around|over|under|more than|less than)",
+    flags=re.IGNORECASE,
+)
 
 
-def normalize_date(text: str):
+def normalize_date(text: str) -> dict | None:
     text = text.strip()
 
     # Range: "2018 - 2024"
@@ -19,7 +35,7 @@ def normalize_date(text: str):
             "precision": "year",
         }
 
-    # Quarter: "Q1 2024", "Q3 2025"
+    # Quarter: "Q3 2025"
     q_match = re.match(r"^\s*Q([1-4])\s+(\d{4})\s*$", text, flags=re.IGNORECASE)
     if q_match:
         quarter, year = q_match.groups()
@@ -46,16 +62,18 @@ def normalize_date(text: str):
     # Year only: "2017"
     if re.fullmatch(r"\d{4}", text):
         return {"type": "date", "iso": parsed.strftime("%Y"), "precision": "year"}
+
     # Month + year: "March 2026"
     if not re.search(r"\b\d{1,2}(st|nd|rd|th)?\b", text.lower()):
         return {"type": "date", "iso": parsed.strftime("%Y-%m"), "precision": "month"}
+
     # Full date
     return {"type": "date", "iso": parsed.strftime("%Y-%m-%d"), "precision": "day"}
 
 
-def normalize_percent(text: str):
-    is_approx = bool(re.search(APPROX_MARKERS, text, flags=re.IGNORECASE))
-    cleaned = re.sub(APPROX_MARKERS, "", text, flags=re.IGNORECASE).strip()
+def normalize_percent(text: str) -> dict | None:
+    is_approx = bool(APPROX_PATTERN.search(text))
+    cleaned = APPROX_PATTERN.sub("", text).strip()
 
     match = re.search(r"(-?\d+(?:\.\d+)?)\s*%", cleaned)
     if not match:
@@ -68,13 +86,16 @@ def normalize_percent(text: str):
     }
 
 
-def normalize_money(text: str):
+def normalize_money(text: str) -> dict | None:
     cleaned = text.strip().replace(",", "")
 
-    is_approx = bool(re.match(r"^(~|≈|approx\.?|about|around)", cleaned, flags=re.IGNORECASE))
-    cleaned = re.sub(r"^(~|≈|approx\.?|about|around)\s*", "", cleaned, flags=re.IGNORECASE)
+    is_approx = bool(re.match(
+        r"^(~|≈|approx\.?|about|around)", cleaned, flags=re.IGNORECASE
+    ))
+    cleaned = re.sub(
+        r"^(~|≈|approx\.?|about|around)\s*", "", cleaned, flags=re.IGNORECASE
+    )
 
-    # Handle leading minus before currency symbol: "-$500"
     is_negative = False
     if cleaned.startswith("-"):
         is_negative = True
@@ -105,13 +126,18 @@ def normalize_money(text: str):
         "approximate": is_approx,
     }
 
-def normalize_entity(label: str, text: str):
-    """Route an entity to the right normalizer. Returns None if no rule matches."""
-    label = label.upper()
-    if label == "DATE":
+
+def normalize_entity(label: str, text: str) -> dict | None:
+    """Route an entity to the right normalizer by label. Returns None if no rule matches."""
+    key = label.upper()
+    if key == "DATE":
         return normalize_date(text)
-    if label in {"PERCENT", "PERCENTAGE"}:
+    if key in {"PERCENT", "PERCENTAGE"}:
         return normalize_percent(text)
-    if label in {"MONEY", "AMOUNT"}:
+    if key in {"MONEY", "AMOUNT"}:
         return normalize_money(text)
     return None
+
+
+# Alias — both names work in imports
+normalize = normalize_entity

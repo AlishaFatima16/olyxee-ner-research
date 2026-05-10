@@ -18,3 +18,73 @@
 {"timestamp": "2026-04-30T18:56:38.864498+00:00", "label": "Date", "raw": "Q3 2024", "confidence": 0.9263272881507874, "threshold": 0.95, "kind": "near_supported"}
 {"timestamp": "2026-04-30T18:56:38.881895+00:00", "label": "Company", "raw": "DeepMind", "confidence": 0.8546, "threshold": 0.85, "kind": "near_supported"}
 {"timestamp": "2026-04-30T18:56:38.881895+00:00", "label": "Date", "raw": "Q3 2024", "confidence": 0.9263, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:04:22.342068+00:00", "label": "Money", "raw": "$94.8bn", "confidence": 0.93, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:06:21.629997+00:00", "label": "Money", "raw": "$2bn", "confidence": 0.9131, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:06:22.351346+00:00", "label": "Date", "raw": "Q3 2025", "confidence": 0.9082, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:07:33.254047+00:00", "label": "Date", "raw": "January 2025", "confidence": 0.9691, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:07:35.595483+00:00", "label": "Money", "raw": "$1.2bn", "confidence": 0.9469, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:07:38.952991+00:00", "label": "Date", "raw": "2024", "confidence": 0.9646, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:07:40.456854+00:00", "label": "Company", "raw": "Deutsche Bank", "confidence": 0.8, "threshold": 0.85, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:07:40.457850+00:00", "label": "Money", "raw": "$500m", "confidence": 0.9315, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:07:42.705494+00:00", "label": "Company", "raw": "DeepMind", "confidence": 0.8098, "threshold": 0.85, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:07:42.706489+00:00", "label": "Money", "raw": "$1.2bn", "confidence": 0.9283, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:07:42.707486+00:00", "label": "Date", "raw": "Q3 2024", "confidence": 0.9622, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:07:43.929944+00:00", "label": "Money", "raw": "$2bn", "confidence": 0.9379, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:07:43.930943+00:00", "label": "Date", "raw": "December 2024", "confidence": 0.9787, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:07:44.799889+00:00", "label": "Date", "raw": "Q3 2025", "confidence": 0.9387, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:07:45.286308+00:00", "label": "Date", "raw": "Q3 2025", "confidence": 0.9387, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:07:51.373915+00:00", "label": "Money", "raw": "Revenue", "confidence": 0.6573, "threshold": 0.7, "kind": "near_review"}
+{"timestamp": "2026-05-10T05:07:51.373915+00:00", "label": "Money", "raw": "$3bn", "confidence": 0.9471, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:07:52.128052+00:00", "label": "Company", "raw": "Deutsche Bank", "confidence": 0.8373, "threshold": 0.85, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:07:52.130047+00:00", "label": "Money", "raw": "profit", "confidence": 0.7499, "threshold": 0.7, "kind": "near_review"}
+{"timestamp": "2026-05-10T05:07:52.132041+00:00", "label": "Date", "raw": "2025", "confidence": 0.928, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:07:54.634184+00:00", "label": "Money", "raw": "$2bn", "confidence": 0.9318, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:07:55.465080+00:00", "label": "Date", "raw": "January 2025", "confidence": 0.9696, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:15:11.116473+00:00", "label": "Money", "raw": "$94.8bn", "confidence": 0.93, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:16:25.812758+00:00", "label": "Money", "raw": "$2bn", "confidence": 0.9131, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:16:25.969206+00:00", "label": "Date", "raw": "Q3 2025", "confidence": 0.9082, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:07.365751+00:00", "label": "Date", "raw": "January 2025", "confidence": 0.9691, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:07.989396+00:00", "label": "Money", "raw": "$1.2bn", "confidence": 0.9469, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:08.385248+00:00", "label": "Date", "raw": "2024", "confidence": 0.9646, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:08.754310+00:00", "label": "Company", "raw": "Deutsche Bank", "confidence": 0.8, "threshold": 0.85, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:08.755306+00:00", "label": "Money", "raw": "$500m", "confidence": 0.9315, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:09.139937+00:00", "label": "Company", "raw": "DeepMind", "confidence": 0.8098, "threshold": 0.85, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:09.139937+00:00", "label": "Money", "raw": "$1.2bn", "confidence": 0.9283, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:09.139937+00:00", "label": "Date", "raw": "Q3 2024", "confidence": 0.9622, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:09.546590+00:00", "label": "Money", "raw": "$2bn", "confidence": 0.9379, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:09.546590+00:00", "label": "Date", "raw": "December 2024", "confidence": 0.9787, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:09.938489+00:00", "label": "Date", "raw": "Q3 2025", "confidence": 0.9387, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:10.312161+00:00", "label": "Date", "raw": "Q3 2025", "confidence": 0.9387, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:11.186947+00:00", "label": "Money", "raw": "revenue", "confidence": 0.716, "threshold": 0.7, "kind": "near_review"}
+{"timestamp": "2026-05-10T05:17:11.186947+00:00", "label": "Date", "raw": "Q3 2025", "confidence": 0.9065, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:12.447496+00:00", "label": "Money", "raw": "Revenue", "confidence": 0.6573, "threshold": 0.7, "kind": "near_review"}
+{"timestamp": "2026-05-10T05:17:12.448490+00:00", "label": "Money", "raw": "$3bn", "confidence": 0.9471, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:12.796207+00:00", "label": "Company", "raw": "Deutsche Bank", "confidence": 0.8373, "threshold": 0.85, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:12.796207+00:00", "label": "Money", "raw": "profit", "confidence": 0.7499, "threshold": 0.7, "kind": "near_review"}
+{"timestamp": "2026-05-10T05:17:12.796207+00:00", "label": "Date", "raw": "2025", "confidence": 0.928, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:14.149135+00:00", "label": "Money", "raw": "$2bn", "confidence": 0.9318, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:17:14.593176+00:00", "label": "Date", "raw": "January 2025", "confidence": 0.9696, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:25:27.291141+00:00", "label": "Money", "raw": "$94.8bn", "confidence": 0.93, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:03.709169+00:00", "label": "Money", "raw": "$2bn", "confidence": 0.9131, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:03.717175+00:00", "label": "Date", "raw": "Q3 2025", "confidence": 0.9082, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:09.397543+00:00", "label": "Date", "raw": "January 2025", "confidence": 0.9691, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:09.827493+00:00", "label": "Money", "raw": "$1.2bn", "confidence": 0.9469, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:10.233313+00:00", "label": "Date", "raw": "2024", "confidence": 0.9646, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:10.593603+00:00", "label": "Company", "raw": "Deutsche Bank", "confidence": 0.8, "threshold": 0.85, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:10.593603+00:00", "label": "Money", "raw": "$500m", "confidence": 0.9315, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:10.976343+00:00", "label": "Company", "raw": "DeepMind", "confidence": 0.8098, "threshold": 0.85, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:10.977339+00:00", "label": "Money", "raw": "$1.2bn", "confidence": 0.9283, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:10.978335+00:00", "label": "Date", "raw": "Q3 2024", "confidence": 0.9622, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:11.374235+00:00", "label": "Money", "raw": "$2bn", "confidence": 0.9379, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:11.374235+00:00", "label": "Date", "raw": "December 2024", "confidence": 0.9787, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:11.795797+00:00", "label": "Date", "raw": "Q3 2025", "confidence": 0.9387, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:12.171274+00:00", "label": "Date", "raw": "Q3 2025", "confidence": 0.9387, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:12.937414+00:00", "label": "Money", "raw": "revenue", "confidence": 0.716, "threshold": 0.7, "kind": "near_review"}
+{"timestamp": "2026-05-10T05:26:12.937414+00:00", "label": "Date", "raw": "Q3 2025", "confidence": 0.9065, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:13.780230+00:00", "label": "Money", "raw": "Revenue", "confidence": 0.6573, "threshold": 0.7, "kind": "near_review"}
+{"timestamp": "2026-05-10T05:26:13.780230+00:00", "label": "Money", "raw": "$3bn", "confidence": 0.9471, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:14.124624+00:00", "label": "Company", "raw": "Deutsche Bank", "confidence": 0.8373, "threshold": 0.85, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:14.124624+00:00", "label": "Money", "raw": "profit", "confidence": 0.7499, "threshold": 0.7, "kind": "near_review"}
+{"timestamp": "2026-05-10T05:26:14.124624+00:00", "label": "Date", "raw": "2025", "confidence": 0.928, "threshold": 0.95, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:18.781046+00:00", "label": "Money", "raw": "$2bn", "confidence": 0.9318, "threshold": 0.9, "kind": "near_supported"}
+{"timestamp": "2026-05-10T05:26:19.199419+00:00", "label": "Date", "raw": "January 2025", "confidence": 0.9696, "threshold": 0.95, "kind": "near_supported"}

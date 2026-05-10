@@ -15,16 +15,14 @@ app = FastAPI(
 )
 
 
-# ── Request / Response models ─────────────────────────────────────────────────
-
 class VerifyRequest(BaseModel):
-    text: str = Field(..., min_length=1, description="Raw text to process")
-    chunk_id: str = Field("001", description="Unique chunk identifier for audit trail")
-    source_document: str = Field("inline", description="Source document name or ID")
+    text: str = Field(..., min_length=1)
+    chunk_id: str = Field("001")
+    source_document: str = Field("inline")
 
 
 class BatchItem(BaseModel):
-    text: str = Field(..., min_length=1)
+    text: str = Field(...)
     chunk_id: str = Field("001")
     source_document: str = Field("inline")
 
@@ -39,8 +37,6 @@ class BatchResultItem(BaseModel):
     result: Optional[dict[str, Any]] = None
     error: Optional[str] = None
 
-
-# ── Routes ────────────────────────────────────────────────────────────────────
 
 @app.get("/")
 def root():
@@ -65,40 +61,32 @@ def healthz():
 
 @app.post("/verify")
 def verify(req: VerifyRequest):
-    """
-    Process a single text chunk.
-    Returns all entities: supported, review, ambiguous, and unsupported.
-    """
     try:
         result = process_text(req.text, chunk_id=req.chunk_id, source_document=req.source_document)
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Pipeline error: {exc}")
 
-    validation_errors = validate_envelope(result)
-    if validation_errors:
-        raise HTTPException(status_code=500, detail={"schema_validation_failed": validation_errors})
+    errors = validate_envelope(result)
+    if errors:
+        raise HTTPException(status_code=500, detail={"schema_validation_failed": errors})
 
     return result
 
 
 @app.post("/verify/strict")
 def verify_strict(req: VerifyRequest):
-    """
-    Process a single text chunk.
-    Returns ONLY supported entities — safe to write directly to Mahlori.
-    """
     try:
         result = process_text(req.text, chunk_id=req.chunk_id, source_document=req.source_document)
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Pipeline error: {exc}")
 
-    validation_errors = validate_envelope(result)
-    if validation_errors:
-        raise HTTPException(status_code=500, detail={"schema_validation_failed": validation_errors})
+    errors = validate_envelope(result)
+    if errors:
+        raise HTTPException(status_code=500, detail={"schema_validation_failed": errors})
 
     result["unified_entities"] = [
         e for e in result["unified_entities"]
-        if e["status"] == Status.supported
+        if e["status"] == Status.SUPPORTED
     ]
     result["audit"]["strict_mode"] = True
     return result
@@ -106,21 +94,24 @@ def verify_strict(req: VerifyRequest):
 
 @app.post("/verify/batch")
 def verify_batch(req: BatchRequest):
-    """
-    Process up to 50 chunks.
-    Per-item failures are isolated — one bad item does NOT fail the whole batch.
-    """
     results: list[BatchResultItem] = []
 
     for item in req.items:
+        if not item.text.strip():
+            results.append(BatchResultItem(
+                chunk_id=item.chunk_id,
+                status="error",
+                error="Empty text: nothing to process",
+            ))
+            continue
         try:
             result = process_text(item.text, chunk_id=item.chunk_id, source_document=item.source_document)
-            validation_errors = validate_envelope(result)
-            if validation_errors:
+            errors = validate_envelope(result)
+            if errors:
                 results.append(BatchResultItem(
                     chunk_id=item.chunk_id,
                     status="validation_error",
-                    error=f"Schema validation failed: {validation_errors}",
+                    error=f"Schema validation failed: {errors}",
                 ))
             else:
                 results.append(BatchResultItem(
@@ -137,11 +128,10 @@ def verify_batch(req: BatchRequest):
 
     total = len(results)
     succeeded = sum(1 for r in results if r.status == "ok")
-    failed = total - succeeded
 
     return {
         "schema_version": SCHEMA_VERSION,
-        "summary": {"total": total, "succeeded": succeeded, "failed": failed},
+        "summary": {"total": total, "succeeded": succeeded, "failed": total - succeeded},
         "results": [r.model_dump() for r in results],
         "audit": {
             "processed_at": datetime.now(timezone.utc).isoformat(),

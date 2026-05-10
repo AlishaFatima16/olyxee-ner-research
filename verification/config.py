@@ -8,16 +8,19 @@ MODEL_VERSIONS = {
     "gliner": "urchade/gliner_medium-v2.1",
 }
 
-THRESHOLDS: dict[str, tuple[float, float]] = {
-    "DATE":           (0.95, 0.75),
-    "MONEY":          (0.90, 0.70),
-    "AMOUNT":         (0.90, 0.70),
-    "PERCENTAGE":     (0.80, 0.55),
-    "MARKET TREND":   (0.70, 0.50),
+PER_LABEL_THRESHOLDS: dict[str, dict[str, float]] = {
+    "DATE":         {"supported": 0.95, "review": 0.75},
+    "MONEY":        {"supported": 0.90, "review": 0.70},
+    "AMOUNT":       {"supported": 0.90, "review": 0.70},
+    "PERCENTAGE":   {"supported": 0.80, "review": 0.55},
+    "MARKET TREND": {"supported": 0.70, "review": 0.50},
 }
 
-DEFAULT_THRESHOLD: tuple[float, float] = (0.85, 0.60)
+DEFAULT_THRESHOLDS: dict[str, float] = {"supported": 0.85, "review": 0.60}
 
-BORDERLINE_BAND = 0.05
+THRESHOLDS        = PER_LABEL_THRESHOLDS
+DEFAULT_THRESHOLD = DEFAULT_THRESHOLDS
+
+BORDERLINE_BAND: float = 0.05
 
 LOG_PATH = Path(os.getenv("ROUTING_LOG_PATH", "logs/routing.jsonl"))

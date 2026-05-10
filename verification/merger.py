@@ -2,12 +2,11 @@ from __future__ import annotations
 import hashlib
 from typing import Any
 from verification.schema import Status
-from verification.router import route_entity
+from verification.router import route
 from verification.normalizer import normalize
 
 
 def _entity_id(chunk_id: str, label: str, start_char: int, end_char: int) -> str:
-    """Deterministic 16-char hex ID — same entity in same text always gets same ID."""
     key = f"{chunk_id}:{label}:{start_char}:{end_char}"
     return hashlib.sha256(key.encode()).hexdigest()[:16]
 
@@ -56,11 +55,11 @@ def merge_entities(
         canonical = max(group, key=_span_len)
 
         gliner_members = [e for e in group if "gliner" in e.get("sources", [])]
-        if gliner_members:
-            primary = max(gliner_members, key=_span_len)
-            confidence = primary["confidence"]
-        else:
-            confidence = canonical.get("confidence", 0.0)
+        confidence = (
+            max(gliner_members, key=_span_len)["confidence"]
+            if gliner_members
+            else canonical.get("confidence", 0.0)
+        )
 
         sources = sorted({s for e in group for s in e.get("sources", [])})
 
@@ -78,13 +77,13 @@ def merge_entities(
         raw = canonical["raw"]
         normalized = normalize(raw, canonical_label)
 
-        status = route_entity(
-            label=canonical_label,
-            confidence=confidence,
-            normalized=normalized,
-            raw=raw,
-            conflicts=conflicts,
-        )
+        if conflicts:
+            status = Status.AMBIGUOUS
+        else:
+            status = route(canonical_label, confidence, raw)
+
+        if normalized is None and status == Status.SUPPORTED:
+            status = Status.REVIEW
 
         entity_out: dict[str, Any] = {
             "entity_id": _entity_id(chunk_id, canonical_label, canonical["start_char"], canonical["end_char"]),
