@@ -11,7 +11,9 @@ _gliner = None
 
 GLINER_LABELS = [
     "Company", "Person", "Country", "City", "Date",
-    "Money", "Percentage", "Market Trend", "Product",
+    "Money", "Percentage", "Market Trend", "Product",# New — Orgni operational labels
+    "Deadline", "Assignee", "Action Required",
+    "Approval Request", "Priority", "Department", "Case Reference",
 ]
 
 

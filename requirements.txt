@@ -1,6 +1,6 @@
-﻿spacy==3.7.4
+spacy==3.7.4
 gliner==0.1.12
-fastapi==0.111.0
-uvicorn==0.29.0
-dateparser==1.2.0
-pytest==8.2.0
+fastapi
+uvicorn
+pytest
+dateparser
